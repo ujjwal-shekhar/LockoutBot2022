@@ -12,7 +12,7 @@ from utils import challonge_api, paginator, discord_, tournament_helper
 from constants import BOT_INVITE, GITHUB_LINK, SERVER_INVITE, ADMIN_PRIVILEGE_ROLES
 
 MAX_REGISTRANTS = 256
-
+LOCKOUT_MANAGERS_ROLE_IDS = [710823891509182526, 855062427493335080, 843001693901029397, 993933796804153374]
 
 class Tournament(commands.Cog):
     def __init__(self, client):
@@ -103,6 +103,11 @@ class Tournament(commands.Cog):
 
     @tournament.command(name="register", brief="Register for the tournament")
     async def register(self, ctx):
+        author_roles = [y.id  for y in ctx.author.roles]
+        if sum([1 if i in author_roles else 0 for i in LOCKOUT_MANAGERS_ROLE_IDS]) == 0:
+            await discord_.send_message(ctx, f"{ctx.author.mention} you require 'manage server' permission or one of the "
+                                    f"following roles: {', '.join(ADMIN_PRIVILEGE_ROLES)} to use this command")
+            return
         tournament_info = self.db.get_tournament_info(ctx.guild.id)
         if not tournament_info:
             await discord_.send_message(ctx, "There is no ongoing tournament in the server currently")

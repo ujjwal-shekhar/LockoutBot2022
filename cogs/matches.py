@@ -23,6 +23,7 @@ RESPONSE_WAIT_TIME = 30
 ONGOING_PER_PAGE = 10
 RECENT_PER_PAGE = 5
 
+LOCKOUT_MANAGERS_ROLE_IDS = [710823891509182526, 855062427493335080, 843001693901029397, 993933796804153374]
 
 async def plot_graph(ctx, data, handle):
     x_axis, y_axis = [], []
@@ -104,6 +105,11 @@ class Matches(commands.Cog):
 
     @match.command(brief="Challenge someone to a match")
     async def challenge(self, ctx, member:discord.Member, rating: int):
+        author_roles = [y.id  for y in ctx.author.roles]
+        if sum([1 if i in author_roles else 0 for i in LOCKOUT_MANAGERS_ROLE_IDS]) == 0:
+            await discord_.send_message(ctx, f"{ctx.author.mention} you require 'manage server' permission or one of the "
+                                    f"following roles: {', '.join(ADMIN_PRIVILEGE_ROLES)} to use this command")
+            return
         if member.id == ctx.author.id:
             await discord_.send_message(ctx, "You cannot challenge yourself!!")
             return
@@ -151,6 +157,7 @@ class Matches(commands.Cog):
 
     @match.command(brief="Decline a challenge")
     async def decline(self, ctx):
+        
         if not self.db.is_challenged(ctx.guild.id, ctx.author.id):
             await discord_.send_message(ctx, "No-one is challenging you")
             return

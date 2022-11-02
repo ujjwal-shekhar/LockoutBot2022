@@ -27,6 +27,7 @@ REPEAT_BOOL = 0
 
 DIV_1_CHANNELS = [1037424282243969135, 1037425129946366083, 1037425230672576622, 1037425352231878676]
 
+LOCKOUT_MANAGERS_ROLE_IDS = [710823891509182526, 855062427493335080, 843001693901029397, 993933796804153374]
 
 class Round(commands.Cog):
     def __init__(self, client):
@@ -60,6 +61,12 @@ class Round(commands.Cog):
 
     @round.command(name="challenge", brief="Challenge multiple users to a round")
     async def challenge(self, ctx, *users: discord.Member):
+        author_roles = [y.id  for y in ctx.author.roles]
+        if sum([1 if i in author_roles else 0 for i in LOCKOUT_MANAGERS_ROLE_IDS]) == 0:
+            await discord_.send_message(ctx, f"{ctx.author.mention} you require 'manage server' permission or one of the "
+                                    f"following roles: {', '.join(ADMIN_PRIVILEGE_ROLES)} to use this command")
+            return
+
         users = list(set(users))
         if len(users) == 0:
             await discord_.send_message(ctx, f"The correct usage is `.round challenge @user1 @user2...`")
@@ -430,6 +437,11 @@ class Round(commands.Cog):
 
     @round.command(name="custom", brief="Challenge to a round with custom problemset")
     async def custom(self, ctx, *users: discord.Member):
+        author_roles = [y.id  for y in ctx.author.roles]
+        if sum([1 if i in author_roles else 0 for i in LOCKOUT_MANAGERS_ROLE_IDS]) == 0:
+            await discord_.send_message(ctx, f"{ctx.author.mention} you require 'manage server' permission or one of the "
+                                    f"following roles: {', '.join(ADMIN_PRIVILEGE_ROLES)} to use this command")
+            return
         users = list(set(users))
         if len(users) == 0:
             await discord_.send_message(ctx, f"The correct usage is `.round custom @user1 @user2...`")
