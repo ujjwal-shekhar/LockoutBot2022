@@ -28,7 +28,7 @@ async def on_ready():
     scheduler.add_job(update, 'interval', seconds=AUTO_UPDATE_TIME)
     scheduler.add_job(tasks.create_backup, CronTrigger(hour="0, 6, 12, 18", timezone="Asia/Kolkata"), [client])
     scheduler.add_job(tasks.update_ratings, CronTrigger(minute="30", timezone="Asia/Kolkata"), [client])
-    scheduler.add_job(tasks.update_problemset, CronTrigger(hour="23", minute="15", timezone="Asia/Kolkata"), [client])
+    scheduler.add_job(tasks.update_problemset, CronTrigger(hour="23", minute="30", timezone="Asia/Kolkata"), [client])
     scheduler.add_job(tasks.scrape_authors, CronTrigger(day_of_week="0", timezone="Asia/Kolkata"), [client])
     scheduler.start()
 
