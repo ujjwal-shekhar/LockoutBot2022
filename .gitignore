@@ -247,7 +247,6 @@ dmypy.json
 # profiling data
 .prof
 
-authors.json
 backup
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm
