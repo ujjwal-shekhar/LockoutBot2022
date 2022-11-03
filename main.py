@@ -12,7 +12,7 @@ from constants import AUTO_UPDATE_TIME
 
 intents = discord.Intents.default()
 intents.members = False
-client = Bot(case_insensitive=True, description="Lockout Bot", command_prefix=when_mentioned_or("."), intents=intents)
+client = Bot(case_insensitive=True, description="Lockout Bot", command_prefix=when_mentioned_or("lockout "), intents=intents)
 
 logging_channel = None
 
