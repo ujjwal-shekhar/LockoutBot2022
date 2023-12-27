@@ -53,7 +53,7 @@ async def plot_graph(ctx, data, handle):
     plt.close()
     embed = Embed(title="Match rating for for %s" % handle, color=Color.blue())
     embed.set_image(url="attachment://plot.png")
-    embed.set_footer(text="Requested by " + str(ctx.author), icon_url=ctx.author.avatar_url)
+    embed.set_footer(text="Requested by " + str(ctx.author), icon_url=ctx.author.avatar)
     await ctx.channel.send(embed=embed, file=discord_file)
 
 
@@ -81,15 +81,15 @@ class Matches(commands.Cog):
         self.cf = cf_api.CodeforcesAPI()
 
     def make_match_embed(self, ctx):
-        desc = "Information about Matches related commands! **[use .match <command>]**\n\n"
+        desc = "Information about Matches related commands! **[use &match <command>]**\n\n"
         match = self.client.get_command('match')
 
         for cmd in match.commands:
             desc += f"`{cmd.name}`: **{cmd.brief}**\n"
         embed = discord.Embed(description=desc, color=discord.Color.dark_magenta())
-        embed.set_author(name="Lockout commands help", icon_url=ctx.me.avatar_url)
+        embed.set_author(name="Lockout commands help", icon_url=ctx.me.avatar)
         embed.set_footer(
-            text="Use the prefix . before each command. For detailed usage about a particular command, type .help match <command>")
+            text="Use the prefix & before each command. For detailed usage about a particular command, type &help match <command>")
         embed.add_field(name="GitHub repository", value=f"[GitHub]({GITHUB_LINK})",
                         inline=True)
         embed.add_field(name="Bot Invite link",
@@ -99,7 +99,7 @@ class Matches(commands.Cog):
                         inline=True)
         return embed
 
-    @commands.group(brief='Commands related to matches. Type .match for more details', invoke_without_command=True)
+    @commands.group(brief='Commands related to matches. Type &match for more details', invoke_without_command=True)
     async def match(self, ctx):
         await ctx.send(embed=self.make_match_embed(ctx))
 
@@ -139,7 +139,7 @@ class Matches(commands.Cog):
         duration = resp[1]
 
         await ctx.send(f"{ctx.author.mention} has challenged {member.mention} to a match with problem ratings from "
-                       f"{rating} to {rating+400} and lasting {duration} minutes. Type `.match accept` within 60 seconds to accept")
+                       f"{rating} to {rating+400} and lasting {duration} minutes. Type `&match accept` within 60 seconds to accept")
         tme = int(time.time())
         self.db.add_to_challenge(ctx.guild.id, ctx.author.id, member.id, rating, tme, ctx.channel.id, duration)
         await asyncio.sleep(60)
@@ -171,7 +171,7 @@ class Matches(commands.Cog):
             return
         embed = Embed(description=f"Preparing to start the match...", color=Color.green())
         embed.set_footer(text=f"You can now conduct tournaments using the bot.\n"
-                              f"Type .tournament faq for more info")
+                              f"Type &tournament faq for more info")
         await ctx.send(embed=embed)
 
         data = self.db.get_challenge_info(ctx.guild.id, ctx.author.id)
@@ -522,5 +522,5 @@ class Matches(commands.Cog):
         await paginator.Paginator(data, ["User", "Rating"], f"Match Ratings", 10).paginate(ctx, self.client)
 
 
-def setup(client):
-    client.add_cog(Matches(client))
+async def setup(client):
+    await client.add_cog(Matches(client))

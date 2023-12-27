@@ -21,14 +21,14 @@ class Tournament(commands.Cog):
         self.api = challonge_api.ChallongeAPI(self.client)
 
     def make_tournament_embed(self, ctx):
-        desc = "Information about Tournament related commands! **[use .tournament <command>]**\n\n"
+        desc = "Information about Tournament related commands! **[use &tournament <command>]**\n\n"
         handle = self.client.get_command('tournament')
         for cmd in handle.commands:
             desc += f"`{cmd.name}`: **{cmd.brief}**\n"
         embed = discord.Embed(description=desc, color=discord.Color.dark_magenta())
-        embed.set_author(name="Lockout commands help", icon_url=ctx.me.avatar_url)
+        embed.set_author(name="Lockout commands help", icon_url=ctx.me.avatar)
         embed.set_footer(
-            text="Use the prefix . before each command. For detailed usage about a particular command, type .help <command>")
+            text="Use the prefix & before each command. For detailed usage about a particular command, type &help <command>")
         embed.add_field(name="GitHub repository", value=f"[GitHub]({GITHUB_LINK})",
                         inline=True)
         embed.add_field(name="Bot Invite link",
@@ -38,7 +38,7 @@ class Tournament(commands.Cog):
                         inline=True)
         return embed
 
-    @commands.group(brief='Commands related to tournaments! Type .tournament for more details', invoke_without_command=True, aliases=['tourney'])
+    @commands.group(brief='Commands related to tournaments! Type &tournament for more details', invoke_without_command=True, aliases=['tourney'])
     async def tournament(self, ctx):
         await ctx.send(embed=self.make_tournament_embed(ctx))
 
@@ -49,17 +49,17 @@ class Tournament(commands.Cog):
                 ["Where will the tournament be held?",
                  "The tournament will be held on [Challonge](https://challonge.com). The bot will automatically setup the tournament and update brackets."],
                 ["How to setup a tournament?",
-                 "To setup a tournament type `.tournament setup x y` where x is an integer in the range 0 to 2 (Single Elim, Double Elim, Swiss) denoting tournament type and y is the name of the tournament."],
+                 "To setup a tournament type `&tournament setup x y` where x is an integer in the range 0 to 2 (Single Elim, Double Elim, Swiss) denoting tournament type and y is the name of the tournament."],
                 ["How to register/unregister for the tournament?",
-                 "To register type `.tournament register` and to unregister type `.tournament unregister`. Admins can forcefully unregister a user by typing `.tournament _unregister <handle>`."],
+                 "To register type `&tournament register` and to unregister type `&tournament unregister`. Admins can forcefully unregister a user by typing `&tournament _unregister <handle>`."],
                 ["How to start the tournament?",
-                 "To start the tournament, type `.tournament begin`"],
+                 "To start the tournament, type `&tournament begin`"],
                 ["How to compete once the tournament has started?",
-                 "To compete, use the `.round` command and challenge your opponent. The bot will automatically ask you if you want the result of the round to be counted in the tournament and update the tournament bracket once the round is complete."],
+                 "To compete, use the `&round` command and challenge your opponent. The bot will automatically ask you if you want the result of the round to be counted in the tournament and update the tournament bracket once the round is complete."],
                 ["What if my opponent doesn't show up or leaves the server without completing the matches?",
-                 "You can ask an admin to use the command `.tournament forcewin <handle>` where handle is the winners codeforces handle."],
+                 "You can ask an admin to use the command `&tournament forcewin <handle>` where handle is the winners codeforces handle."],
                 ["What if the bot accidentally gives victory to the wrong user?",
-                 "You can ask an admin to invalidate the match results by typing `.tournament match_invalidate x` where x is match number (can be accessed from challonge page of the tournament). This will also reset the subsequent matches whose result depends on this match"]]
+                 "You can ask an admin to invalidate the match results by typing `&tournament match_invalidate x` where x is match number (can be accessed from challonge page of the tournament). This will also reset the subsequent matches whose result depends on this match"]]
 
         embed = discord.Embed(description='\n\n'.join([f':small_red_triangle_down: **{x[0]}**\n:white_small_square: {x[1]}' for x in data]), color=discord.Color.dark_green())
         embed.set_author(name="Frequently Asked Questions about tournaments")
@@ -93,9 +93,9 @@ class Tournament(commands.Cog):
 
         desc = f"""
                Initialised a {types[tournament_type]} tournament. 
-               To register, type `.tournament register` (Max registrations: **{MAX_REGISTRANTS}**)
-               To unregister, type `.tournament unregister`
-               To start the tournament, type `.tournament begin` 
+               To register, type `&tournament register` (Max registrations: **{MAX_REGISTRANTS}**)
+               To unregister, type `&tournament unregister`
+               To start the tournament, type `&tournament begin` 
                """
         embed = discord.Embed(description=desc, color=discord.Color.green())
         embed.set_author(name=tournament_name)
@@ -216,7 +216,7 @@ class Tournament(commands.Cog):
             return
 
         if tournament_info.status == 2:
-            await discord_.send_message(ctx, f"The tournament has already begun! Type `.tournament matches` or `.tournament info` to view details about the tournament")
+            await discord_.send_message(ctx, f"The tournament has already begun! Type `&tournament matches` or `&tournament info` to view details about the tournament")
             return
 
         registrants = self.db.get_registrants(ctx.guild.id)
@@ -272,7 +272,7 @@ class Tournament(commands.Cog):
             desc = ""
             desc += f"The tournament has been setup. You can find the brackets [here](https://challonge.com/{tournament_resp['tournament']['url']})\n"
             desc += f"You can now make predictions on each of the brackets and climb up the predictions leaderboard. Make new predictions [here](https://challonge.com/tournaments/{tournament_resp['tournament']['id']}/predictions/new)\n\n"
-            desc += f"Note that the tournament has **not** started yet. Once everyone has made their predictions, type `.tournament begin` for the tournament to officially begin\n\n"
+            desc += f"Note that the tournament has **not** started yet. Once everyone has made their predictions, type `&tournament begin` for the tournament to officially begin\n\n"
 
             desc += f"**Tournament type**: {['Single Elimination', 'Double Elimination', 'Swiss'][tournament_info.type]}\n"
             desc += f"**Number of registrations**: {len(registrants)}"
@@ -298,10 +298,10 @@ class Tournament(commands.Cog):
                    f"If the round is part of the tournament, then the bot will ask whether you want the result of the round " \
                    f"to be counted in the tournament. \nIn case of a draw, you will have to play the round again. GLHF!\n\n"
             desc += f"**Some useful commands**:\n\n"
-            desc += f"`.tournament matches`: View a list of future matches of the tournament\n"
-            desc += f"`.tournament info`: View general info about the tournament\n"
-            desc += f"`.tournament forcewin <handle>`: Grant victory to a user without conducting the match\n"
-            desc += f"`.tournament invalidate`: Invalidate the tournament\n"
+            desc += f"`&tournament matches`: View a list of future matches of the tournament\n"
+            desc += f"`&tournament info`: View general info about the tournament\n"
+            desc += f"`&tournament forcewin <handle>`: Grant victory to a user without conducting the match\n"
+            desc += f"`&tournament invalidate`: Invalidate the tournament\n"
 
             embed = discord.Embed(description=desc, color=discord.Color.green())
             embed.set_author(name=tournament_info.name)
@@ -335,7 +335,7 @@ class Tournament(commands.Cog):
             await discord_.send_message(ctx, "There is no ongoing tournament in the server currently")
             return
         if tournament_info.status != 2:
-            await discord_.send_message(ctx, "The tournament has not begun yet, type `.tournament begin` to start the tournament")
+            await discord_.send_message(ctx, "The tournament has not begun yet, type `&tournament begin` to start the tournament")
             return
 
         matches_resp = await self.api.get_tournament_matches(tournament_info.id)
@@ -375,7 +375,7 @@ class Tournament(commands.Cog):
             await discord_.send_message(ctx, "There is no ongoing tournament in the server currently")
             return
         if tournament_info.status != 2:
-            await discord_.send_message(ctx, "The tournament has not begun yet, type `.tournament begin` to start the tournament")
+            await discord_.send_message(ctx, "The tournament has not begun yet, type `&tournament begin` to start the tournament")
             return
 
         registrants = self.db.get_registrants(ctx.guild.id)
@@ -452,7 +452,7 @@ class Tournament(commands.Cog):
             await discord_.send_message(ctx, "There is no ongoing tournament in the server currently")
             return
         if tournament_info.status != 2:
-            await discord_.send_message(ctx, "The tournament has not begun yet, type `.tournament begin` to start the tournament")
+            await discord_.send_message(ctx, "The tournament has not begun yet, type `&tournament begin` to start the tournament")
             return
 
         if tournament_info.type != 2:
@@ -537,7 +537,7 @@ class Tournament(commands.Cog):
             return
         if tournament_info.status != 2:
             await discord_.send_message(ctx,
-                                        "The tournament has not begun yet, type `.tournament begin` to start the tournament")
+                                        "The tournament has not begun yet, type `&tournament begin` to start the tournament")
             return
 
         matches_resp = await self.api.get_tournament_matches(tournament_info.id)
@@ -578,5 +578,5 @@ class Tournament(commands.Cog):
         await discord_.content_pagination(content, self.client, 10, "Recent tournaments", ctx, discord.Color.dark_purple())
 
 
-def setup(client):
-    client.add_cog(Tournament(client))
+async def setup(client):
+    await client.add_cog(Tournament(client))

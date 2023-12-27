@@ -22,22 +22,22 @@ class Help(commands.Cog):
 
 
         content = []
-        desc = "\n\n:crossed_swords: [Handle related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Handles-related-commands) **[use .handle <command>]**\n\n"
+        desc = "\n\n:crossed_swords: [Handle related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Handles-related-commands) **[use &handle <command>]**\n\n"
         for cmd in handle.commands:
             desc += f"`{cmd.name}`: **{cmd.brief}**\n"
         content.append(desc)
 
-        desc = "\n\n:crossed_swords: [Match related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Matches-related-commands) **[use .match <command>]**\n\n"
+        desc = "\n\n:crossed_swords: [Match related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Matches-related-commands) **[use &match <command>]**\n\n"
         for cmd in match.commands:
             desc += f"`{cmd.name}`: **{cmd.brief}**\n"
         content.append(desc)
 
-        desc = "\n\n:crossed_swords: [Round related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Round-related-commands) **[use .round <command>]**\n\n"
+        desc = "\n\n:crossed_swords: [Round related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Round-related-commands) **[use &round <command>]**\n\n"
         for cmd in round.commands:
             desc += f"`{cmd.name}`: **{cmd.brief}**\n"
         content.append(desc)
 
-        desc = "\n\n:crossed_swords: [Tournament related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Tournament-related-commands) **[use .tournament <command>]**\n\n"
+        desc = "\n\n:crossed_swords: [Tournament related commands](https://github.com/pseudocoder10/Lockout-Bot/wiki/Tournament-related-commands) **[use &tournament <command>]**\n\n"
         for cmd in tournament.commands:
             desc += f"`{cmd.name}`: **{cmd.brief}**\n"
         content.append(desc)
@@ -45,9 +45,9 @@ class Help(commands.Cog):
         embeds = []
         for desc in content:
             embed = discord.Embed(description=headers + desc + footers, color=discord.Color.dark_magenta())
-            embed.set_author(name="Lockout commands help", icon_url=ctx.me.avatar_url)
+            embed.set_author(name="Lockout commands help", icon_url=ctx.me.avatar)
             embed.set_footer(
-                text="Use the prefix . before each command. For detailed usage about a particular command, type .help <command>")
+                text="Use the prefix & before each command. For detailed usage about a particular command, type &help <command>")
             embed.add_field(name="GitHub repository", value=f"[GitHub]({GITHUB_LINK})",
                             inline=True)
             embed.add_field(name="Bot Invite link",
@@ -105,5 +105,5 @@ class Help(commands.Cog):
             await ctx.send(embed=self.make_cmd_embed(command))
 
 
-def setup(client):
-    client.add_cog(Help(client))
+async def setup(client):
+    await client.add_cog(Help(client))

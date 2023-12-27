@@ -64,8 +64,8 @@ class Misc(commands.Cog):
 
         embed = discord.Embed(description="A discord bot to compete with others on codeforces in a Lockout format",
                               color=discord.Color.magenta())
-        embed.set_author(name="Bot Stats", icon_url=self.client.user.avatar_url)
-        embed.set_thumbnail(url=self.client.user.avatar_url)
+        embed.set_author(name="Bot Stats", icon_url=self.client.user.avatar)
+        embed.set_thumbnail(url=self.client.user.avatar)
 
         embed.add_field(name="Handles Set", value=f"**{handles}**", inline=True)
         embed.add_field(name="Matches played", value=f"**{matches}**", inline=True)
@@ -81,5 +81,5 @@ class Misc(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(client):
-    client.add_cog(Misc(client))
+async def setup(client):
+    await client.add_cog(Misc(client))

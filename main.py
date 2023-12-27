@@ -1,6 +1,7 @@
 import discord
 import os
 import datetime
+import asyncio
 
 from discord.ext.commands import Bot, when_mentioned_or
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -10,9 +11,9 @@ from discord.ext.commands import CommandNotFound, CommandOnCooldown, MissingPerm
 from utils import tasks
 from constants import AUTO_UPDATE_TIME
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = False
-client = Bot(case_insensitive=True, description="Lockout Bot", command_prefix=when_mentioned_or("lockout "), intents=intents)
+client = Bot(case_insensitive=True, description="Lockout Bot", command_prefix=when_mentioned_or("&"), intents=intents)
 
 logging_channel = None
 
@@ -79,15 +80,21 @@ async def on_command_error(ctx: discord.ext.commands.Context, error: Exception):
         desc += f"**{str(error)}**"
         await logging_channel.send(desc)
 
-
-if __name__ == "__main__":
+async def load_extensions():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
+            print(filename)
             try:
-                client.load_extension(f'cogs.{filename[:-3]}')
+                await client.load_extension(f'cogs.{filename[:-3]}')
             except Exception as e:
                 print(f'Failed to load file {filename}: {str(e)}')
                 print(str(e))
 
-    token = os.environ.get('LOCKOUT_BOT_TOKEN')
-    client.run(token)
+async def main():
+    async with client:
+        await load_extensions()
+        token = os.environ.get('LOCKOUT_BOT_TOKEN')
+        await client.start(token)
+
+if __name__ == "__main__":
+    asyncio.run(main())
