@@ -26,6 +26,7 @@ async def on_ready():
     await logging_channel.send(f"Bot ready")
 
     scheduler = AsyncIOScheduler()
+    await logging_channel.send(f"Bot adding scheduling jobs")
     scheduler.add_job(update, 'interval', seconds=AUTO_UPDATE_TIME)
     scheduler.add_job(tasks.create_backup, CronTrigger(hour="0, 6, 12, 18", timezone="Asia/Kolkata"), [client])
     scheduler.add_job(tasks.update_ratings, CronTrigger(minute="30", timezone="Asia/Kolkata"), [client])
