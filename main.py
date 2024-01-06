@@ -13,14 +13,14 @@ from constants import AUTO_UPDATE_TIME
 
 intents = discord.Intents.all()
 intents.members = False
-client = Bot(case_insensitive=True, description="Lockout Bot", command_prefix=when_mentioned_or("&"), intents=intents)
+client = Bot(case_insensitive=True, description="Lockout Bot", command_prefix=when_mentioned_or("lockout "), intents=intents)
 
 logging_channel = None
 
 
 @client.event
 async def on_ready():
-    await client.change_presence(activity=discord.Game(name="in matches ⚔️"))
+    await client.change_presence(activity=discord.Game(name="Getting Ready 🛠️"))
     global logging_channel
     logging_channel = await client.fetch_channel(os.environ.get("LOGGING_CHANNEL"))
     await logging_channel.send(f"Bot ready")
