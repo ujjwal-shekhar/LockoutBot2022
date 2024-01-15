@@ -20,7 +20,7 @@ logging_channel = None
 
 @client.event
 async def on_ready():
-    await client.change_presence(activity=discord.Game(name="Getting Ready 🛠️"))
+    await client.change_presence(activity=discord.Game(name="With Lives ⚔️"))
     global logging_channel
     logging_channel = await client.fetch_channel(os.environ.get("LOGGING_CHANNEL"))
     await logging_channel.send(f"Bot ready")

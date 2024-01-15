@@ -9,7 +9,7 @@ from discord.ext.commands import cooldown, BucketType
 
 from data import dbconn
 from utils import cf_api, discord_, codeforces, updation, elo, tournament_helper, challonge_api
-from constants import AUTO_UPDATE_TIME, ADMIN_PRIVILEGE_ROLES
+from constants import AUTO_UPDATE_TIME, ADMIN_PRIVILEGE_ROLES, DIV_1_CHANNELS, DIV_2_CHANNELS, DIV_3_CHANNELS, DIV_4_CHANNELS
 
 
 MAX_ROUND_USERS = 5
@@ -19,13 +19,14 @@ MAX_ALTS = 5
 ROUNDS_PER_PAGE = 5
 
 NUM_DURATION = 60
-NUM_PROBLEM = 6
-RATING_LIST_CHALLENGERS = [1000, 1200, 1400, 1600, 1700, 1800]
-RATING_LIST_MASTERS = [1400, 1600, 1700, 1900, 2000, 2100]
-POINTS_LIST = [101, 202, 304, 408, 516, 632]
-REPEAT_BOOL = 0
+NUM_PROBLEM = 5
 
-DIV_1_CHANNELS = [1037424282243969135, 1037425129946366083, 1037425230672576622, 1037425352231878676]
+RATING_LIST_DIV_1 = [1600, 1600, 1800, 2000, 2200]
+RATING_LIST_DIV_2 = [1300, 1300, 1500, 1700, 1900]
+RATING_LIST_DIV_3 = [900, 900, 1100, 1400, 1600]
+RATING_LIST_DIV_4 = [800, 800, 1000, 1100, 1200]
+POINTS_LIST = [100, 100, 140, 220, 350]
+REPEAT_BOOL = 0
 
 # LOCKOUT_MANAGERS_ROLE_IDS = [710823891509182526, 855062427493335080, 843001693901029397, 993933796804153374]
 
@@ -129,9 +130,15 @@ class Round(commands.Cog):
         #     return
         # rating = rating[1]
         if ctx.channel.id in DIV_1_CHANNELS:
-            rating = RATING_LIST_MASTERS
+            rating = RATING_LIST_DIV_1
+        elif ctx.channel.id in DIV_2_CHANNELS:
+            rating = RATING_LIST_DIV_2
+        elif ctx.channel.id in DIV_3_CHANNELS:
+            rating = RATING_LIST_DIV_3
+        elif ctx.channel.id in DIV_4_CHANNELS:
+            rating = RATING_LIST_DIV_4
         else:
-            rating = RATING_LIST_CHALLENGERS
+            rating = RATING_LIST_DIV_2
             
         # points = await discord_.get_seq_response(self.client, ctx, f"{ctx.author.mention} enter {problem_cnt} space seperated integer denoting the points of problems (between 100 and 10,000)", 60, problem_cnt, ctx.author, [100, 10000])
         # if not points[0]:
